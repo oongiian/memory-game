@@ -19,9 +19,7 @@ var cards = [
     'fa fa-bomb',
     'fa fa-bomb'
 ]
-
-
-//生成初始卡片
+//生成初始随机卡片
 var displayCards = shuffle(cards);
 displayCards.forEach((card, index) => {
   $('.deck').append(
@@ -29,7 +27,6 @@ displayCards.forEach((card, index) => {
       <i class="${card}"></i>
     </li>`)
 });
-
 //洗牌
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
@@ -54,6 +51,14 @@ $(function(){
             //步数
             steps++;
             $('span.moves').text(steps);
+            //星星评分
+            if (steps == 20) {
+                $('ul.stars').find('i').eq(0).removeClass('fa-star').addClass('fa-star-o');
+             } else if (steps == 28) {
+                $('ul.stars').find('i').eq(1).removeClass('fa-star').addClass('fa-star-o');
+            } else if (steps == 35) {
+                $('ul.stars').find('i').eq(2).removeClass('fa-star').addClass('fa-star-o');
+            }
             clickedCards.push($(this));
             if (clickedCards.length === 2) {
                 var firstCard = clickedCards[0].children().attr('class');
