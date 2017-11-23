@@ -47,6 +47,7 @@ function shuffle(array) {
 var clickedCards = [];
 var steps = 0;
 $(function(){
+    //卡片点击
     $('.card').click(function(){
         if (!$(this).hasClass('open show')){
             $(this).addClass('open show');
@@ -54,6 +55,23 @@ $(function(){
             steps++;
             $('span.moves').text(steps);
             clickedCards.push($(this));
+            if (clickedCards.length === 2) {
+                var firstCard = clickedCards[0].children().attr('class');
+                var secondCard = clickedCards[1].children().attr('class');
+                //对比卡片
+                if (firstCard===secondCard) {
+                    clickedCards[0].removeClass('open show').addClass('match');
+                    clickedCards[1].removeClass('open show').addClass('match');
+                    clickedCards = [];                                                        
+                }else{
+                    setTimeout(function wait() {
+                        clickedCards[0].removeClass('open show');
+                        clickedCards[1].removeClass('open show');
+                        clickedCards = [];                                                            
+                    }, 500);
+                }
+            }
+                
 
         } 
     });
