@@ -1,7 +1,7 @@
 /*
  * Create a list that holds all of your cards
  */
-var deck = [
+var cards = [
     'fa fa-diamond', 
     'fa fa-diamond', 
     'fa fa-paper-plane-o',
@@ -26,6 +26,13 @@ var deck = [
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
+var displayCards = shuffle(cards);
+displayCards.forEach((card, index) => {
+  $('.deck').append(
+    `<li class="card">
+      <i class="${card}"></i>
+    </li>`)
+});
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
