@@ -1,6 +1,7 @@
 /*
  * Create a list that holds all of your cards
  */
+
 var cards = [
     'fa fa-diamond', 
     'fa fa-diamond', 
@@ -23,7 +24,7 @@ var cards = [
 var displayCards = shuffle(cards);
 displayCards.forEach((card, index) => {
   $('.deck').append(
-    `<li class="card">
+    `<li class="card ">
       <i class="${card}"></i>
     </li>`)
 });
@@ -42,48 +43,102 @@ function shuffle(array) {
     return array;
 }
 var clickedCards = [];
+var matchedCards = 0;
+
 var steps = 0;
 $(function(){
     //卡片点击
     $('.card').click(function(){
-        if (!$(this).hasClass('open show')){
-            $(this).addClass('open show');
+        if (!$(this).hasClass('open show animated')){
+            $(this).addClass('open show animated')
             //步数
             steps++;
-            $('span.moves').text(steps);
+            $('.moves').text(steps);
             //星星评分
-            if (steps == 20) {
+            if (steps == 18) {
                 $('ul.stars').find('i').eq(0).removeClass('fa-star').addClass('fa-star-o');
-             } else if (steps == 28) {
+             } else if (steps == 26) {
                 $('ul.stars').find('i').eq(1).removeClass('fa-star').addClass('fa-star-o');
-            } else if (steps == 35) {
+            } else if (steps == 34) {
                 $('ul.stars').find('i').eq(2).removeClass('fa-star').addClass('fa-star-o');
             }
             clickedCards.push($(this));
             if (clickedCards.length === 2) {
                 var firstCard = clickedCards[0].children().attr('class');
                 var secondCard = clickedCards[1].children().attr('class');
+
                 //对比卡片
                 if (firstCard===secondCard) {
-                    clickedCards[0].removeClass('open show').addClass('match');
-                    clickedCards[1].removeClass('open show').addClass('match');
-                    clickedCards = [];                                                        
+                    clickedCards[0].removeClass('open show').addClass('match rubberBand');
+                    clickedCards[1].removeClass('open show').addClass('match rubberBand');
+                    clickedCards = [];
+                    matchedCards++;                                                      
                 }else{
+                    clickedCards[0].addClass('shake nomatch');
+                    clickedCards[1].addClass('shake nomatch');
+
+                    $('.deck').addClass('noclick')                    
                     setTimeout(function wait() {
-                        clickedCards[0].removeClass('open show');
-                        clickedCards[1].removeClass('open show');
-                        clickedCards = [];                                                            
-                    }, 500);
+                        clickedCards[0].removeClass('nomatch animated shake open show');
+                        clickedCards[1].removeClass('nomatch animated shake open show');
+                        clickedCards = [];
+                        $('.deck').removeClass('noclick')                        
+                    }, 700);
                 }
             }
-                
+               if(matchedCards==8){
+                   matchAllCards()
+               } 
 
         } 
     });
 });
-
-
+function matchAllCards(){
+    stopClock()   
+    $('#modal').toggleClass('hidden animated bounceInDown');
+    const starRating = $('.stars li .fa.fa-star').length;    
+    if (starRating == 2) {
+        $('.modalStar').find('i').eq(0).removeClass('fa-star').addClass('fa-star-o');
+     } else if (starRating == 1) {
+        $('.modalStar').find('i').eq(0).removeClass('fa-star').addClass('fa-star-o');        
+        $('.modalStar').find('i').eq(1).removeClass('fa-star').addClass('fa-star-o');
+    } else if (starRating == 0) {
+        $('.modalStar').find('i').eq(0).removeClass('fa-star').addClass('fa-star-o');        
+        $('.modalStar').find('i').eq(1).removeClass('fa-star').addClass('fa-star-o');
+        $('.modalStar').find('i').eq(2).removeClass('fa-star').addClass('fa-star-o');
+    }
+    $('.modalButton').click(() => {
+      window.location.reload();
+    });
+}
 //刷新页面
 $('.restart').click(function () {
     window.location.reload();
+    
   });
+//计时器
+var time = 0;
+var interval
+function clock() {
+  interval = setInterval(function () {
+    time ++;
+    $("span.seconds").text(time);
+}, 1000);}
+function stopClock(){
+    clearInterval(interval);
+    delete interval;
+}
+$('.deck').one("click", function () {
+  clock();
+});
+function displayCongratsModal() {
+    const starRating =3;
+    const starRatingDisplay = starRating === 1 ? ' star' : ' stars';
+    const congratsModal = document.getElementById('congrats-modal');
+  
+    $('.starRating').text(starRating).append(starRatingDisplay);
+    $('#play-again').click(() => {
+      congratsModal.style.display = 'none';
+    });
+    congratsModal.style.display = 'block';
+  }
