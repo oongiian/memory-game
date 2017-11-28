@@ -2,7 +2,7 @@
  * Create a list that holds all of your cards
  */
 
-var cards = [
+const cards = [
     'fa fa-diamond', 
     'fa fa-diamond', 
     'fa fa-paper-plane-o',
@@ -51,19 +51,19 @@ $(function(){
     $('.card').click(function(){
         if (!$(this).hasClass('open show animated')){
             $(this).addClass('open show animated')
-            //步数
-            steps++;
-            $('.moves').text(steps);
+
             //星星评分
-            if (steps == 18) {
+            if (steps == 10) {
                 $('ul.stars').find('i').eq(0).removeClass('fa-star').addClass('fa-star-o');
-             } else if (steps == 26) {
+             } else if (steps == 15) {
                 $('ul.stars').find('i').eq(1).removeClass('fa-star').addClass('fa-star-o');
-            } else if (steps == 34) {
-                $('ul.stars').find('i').eq(2).removeClass('fa-star').addClass('fa-star-o');
             }
             clickedCards.push($(this));
             if (clickedCards.length === 2) {
+                //步数
+                steps++;
+                $('.moves').text(steps);
+                
                 var firstCard = clickedCards[0].children().attr('class');
                 var secondCard = clickedCards[1].children().attr('class');
 
@@ -97,15 +97,13 @@ function matchAllCards(){
     stopClock()   
     $('#modal').toggleClass('hidden animated bounceInDown');
     const starRating = $('.stars li .fa.fa-star').length;    
-    if (starRating == 2) {
+    switch(starRating){
+        case 2:
         $('.modalStar').find('i').eq(0).removeClass('fa-star').addClass('fa-star-o');
-     } else if (starRating == 1) {
+        case 1:
         $('.modalStar').find('i').eq(0).removeClass('fa-star').addClass('fa-star-o');        
         $('.modalStar').find('i').eq(1).removeClass('fa-star').addClass('fa-star-o');
-    } else if (starRating == 0) {
-        $('.modalStar').find('i').eq(0).removeClass('fa-star').addClass('fa-star-o');        
-        $('.modalStar').find('i').eq(1).removeClass('fa-star').addClass('fa-star-o');
-        $('.modalStar').find('i').eq(2).removeClass('fa-star').addClass('fa-star-o');
+        default:
     }
     $('.modalButton').click(() => {
       window.location.reload();
@@ -131,14 +129,3 @@ function stopClock(){
 $('.deck').one("click", function () {
   clock();
 });
-function displayCongratsModal() {
-    const starRating =3;
-    const starRatingDisplay = starRating === 1 ? ' star' : ' stars';
-    const congratsModal = document.getElementById('congrats-modal');
-  
-    $('.starRating').text(starRating).append(starRatingDisplay);
-    $('#play-again').click(() => {
-      congratsModal.style.display = 'none';
-    });
-    congratsModal.style.display = 'block';
-  }
